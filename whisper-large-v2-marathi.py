@@ -1,3 +1,5 @@
+# Model page: https://huggingface.co/DrishtiSharma/whisper-large-v2-marathi
+
 # Use a pipeline as a high-level helper
 from transformers import pipeline
 
