@@ -185,4 +185,4 @@ if torch.cuda.is_available():
 generated_ids = model.generate(input_features=input_features)
 
 transcription = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
-transcription
+print(transcription)
