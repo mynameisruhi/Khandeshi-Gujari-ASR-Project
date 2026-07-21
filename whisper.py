@@ -35,7 +35,9 @@ for i, transcript in enumerate(text_list):
 
 dic = {'audio': audio_list, 'text': text_list}
 
-data = Dataset.from_dict(dic).train_test_split(test_size=0.2, shuffle=True)
+data = Dataset.from_dict(dic).train_test_split(test_size=0.2, shuffle=False)
+
+save_test = data['test']
 
 def prepare_dataset(example):
     audio = example["audio"]
@@ -173,3 +175,14 @@ trainer = Seq2SeqTrainer(
 )
 
 trainer.train()
+
+inputs = processor(save_test[0]["audio"]["array"], return_tensors="pt")
+input_features = inputs.input_features
+
+if torch.cuda.is_available():
+  input_features = input_features.to("cuda")
+
+generated_ids = model.generate(input_features=input_features)
+
+transcription = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+transcription
