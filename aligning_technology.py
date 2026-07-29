@@ -71,24 +71,19 @@ import re
 import gc
 from torchaudio.pipelines import MMS_FA as bundle
 
-# 1. Free VRAM Cache
 gc.collect()
 torch.cuda.empty_cache()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# 2. Disable with_star=False to prevent dimension mismatch during chunking
 model = bundle.get_model(with_star=False).to(device)
 tokenizer = bundle.get_tokenizer()
 aligner = bundle.get_aligner()
 uroman_tool = uroman.Uroman()
 
-
-# 4. Load Audio
 audio_file = "preview-audio.wav"
 waveform, sample_rate = torchaudio.load(audio_file)
 
-# 5. Process & Romanize Words
 sentence_word_counts = []
 all_words = []
 
@@ -102,7 +97,6 @@ for sentence in sentences:
 
 tokens = tokenizer(all_words)
 
-# 6. Safe Chunked Inference (30s Windows)
 chunk_sec = 75
 chunk_len = chunk_sec * sample_rate
 total_len = waveform.size(1)
@@ -117,19 +111,14 @@ with torch.inference_mode():
         with torch.autocast(device_type="cuda", dtype=torch.float16):
             chunk_emission, _ = model(chunk)
 
-        # Move chunk emission to CPU float32 immediately
         emissions.append(chunk_emission[0].float().cpu())
 
-# 7. Concatenate along time dimension (dim=0)
 full_emission = torch.cat(emissions, dim=0)
 
-# 8. Compute alignment on CPU
 token_spans = aligner(full_emission, tokens)
 
-# 9. Calculate time ratio
 ratio = waveform.size(1) / full_emission.size(0) / sample_rate
 
-# 10. Output Sentence Timestamps
 word_idx = 0
 for sentence, count in zip(sentences, sentence_word_counts):
     if count == 0:

@@ -3,7 +3,7 @@ Audio to Text in the dialect **Khandeshi Gujari** (dialect of Khandeshi, related
 
 Fine tuning [Whisper Large v3 Turbo](https://huggingface.co/openai/whisper-large-v3-turbo) model on Khandeshi Gujari data
 
-**Model** found at: [rupeez/khandeshi-gujari-asr](https://huggingface.co/rupeez/khandeshi-gujari-asr/commit/1eb8af6fe77236b65905072d7429c4fa6f06192c)
+**Model** found on Hugging Face at: [rupeez/khandeshi-gujari-asr](https://huggingface.co/rupeez/khandeshi-gujari-asr/commit/1eb8af6fe77236b65905072d7429c4fa6f06192c)
 
 ```
 from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq
@@ -15,11 +15,11 @@ model = AutoModelForSpeechSeq2Seq.from_pretrained("openai/whisper-large-v3-turbo
 model = PeftModel.from_pretrained(model, "rupeez/khandeshi-gujari-asr")
  ```
 
-**Dataset** found at [rupeez/khandeshi-gujari-dataset](https://huggingface.co/datasets/rupeez/khandeshi-gujari-dataset)
+**Dataset** found on Hugging Face at: [rupeez/khandeshi-gujari-dataset](https://huggingface.co/datasets/rupeez/khandeshi-gujari-dataset)
 
 
 Dataset transcribed by Rajaram Patil
-
+Audio taken from Gujar Randhak YouTube, Gujar Samaj Mandal on Instagram, and Asha Patil
 
 | Step | Training Loss | Testing Loss | Wer Ortho | Wer |
 | ---: | ------------: | --------------: | --------: | ---: |
