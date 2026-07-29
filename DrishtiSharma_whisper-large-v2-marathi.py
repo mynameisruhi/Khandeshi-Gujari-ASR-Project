@@ -15,11 +15,9 @@ from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq
 processor = AutoProcessor.from_pretrained("DrishtiSharma/whisper-large-v2-marathi")
 model = AutoModelForSpeechSeq2Seq.from_pretrained("DrishtiSharma/whisper-large-v2-marathi")
 
-target_sr = processor.feature_extractor.sampling_rate 
-
 audio = AudioSegment.from_wav("/content/enhanced_झणझणीत.wav")
 
-audio = audio.set_frame_rate(target_sr).set_channels(1)
+audio = audio.set_frame_rate(16000).set_channels(1)
 
 audio_list = []
 text_list = []
@@ -35,7 +33,7 @@ for item in aligned_segments:
     )
     audio_array /= 32768.0  
 
-    audio_list.append({"array": audio_array, "sampling_rate": target_sr})
+    audio_list.append({"array": audio_array, "sampling_rate": 16000})
     text_list.append(item["text"])
 
 dic = {"audio": audio_list, "text": text_list}

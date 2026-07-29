@@ -287,7 +287,7 @@ for source in data_sources:
 
 dic = {"audio": audio_list, "text": text_list}
 data = Dataset.from_dict(dic).train_test_split(
-    test_size=0.2, shuffle=True  # Shuffle set to True for mixed data distribution
+    test_size=0.2, shuffle=True 
 )
 
 save_test = data['test']

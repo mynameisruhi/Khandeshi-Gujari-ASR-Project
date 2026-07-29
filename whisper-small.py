@@ -23,7 +23,7 @@ text_list = []
 for source in data_sources:
     audio = AudioSegment.from_file(source["audio_path"])
 
-    audio = audio.set_frame_rate(target_sr).set_channels(1)
+    audio = audio.set_frame_rate(16000).set_channels(1)
 
     for item in source["segments"]:
         start_ms = int(item["start"] * 1000)
@@ -36,7 +36,7 @@ for source in data_sources:
         )
         audio_array /= 32768.0
 
-        audio_list.append({"array": audio_array, "sampling_rate": target_sr})
+        audio_list.append({"array": audio_array, "sampling_rate": 16000})
         text_list.append(item["text"])
 
 dic = {"audio": audio_list, "text": text_list}
