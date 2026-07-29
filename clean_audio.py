@@ -4,7 +4,7 @@ import numpy as np
 from scipy.io import wavfile
 from IPython.display import Audio
 
-original_video =  # file name goes here
+original_video =  ""# file name goes here
 
 
 if __name__ == "__main__":
