@@ -49,13 +49,18 @@ data = Dataset.from_dict(dic).train_test_split(
 
 save_test = data['test']
 
-def prepare_dataset(batch):
-    audio = batch["audio"]
-    batch["input_features"] = processor(audio["array"], sampling_rate=audio["sampling_rate"]).input_features[0]
-    batch["input_length"] = len(batch["input_features"])
+def prepare_dataset(example):
+    audio = example["audio"]
 
-    batch["labels"] = processor(text=batch["text"]).input_ids
-    return batch
+    example = processor(
+        audio=audio["array"],
+        sampling_rate=audio["sampling_rate"],
+        text=example["text"],
+    )
+
+    example["input_length"] = len(audio["array"]) / audio["sampling_rate"]
+
+    return example
 
 data = data.map(
     prepare_dataset, remove_columns=data.column_names["train"], num_proc=1
@@ -99,7 +104,6 @@ def compute_metrics(pred):
     pred.label_ids[pred.label_ids == -100] = processor.tokenizer.pad_token_id
 
     pred_str = processor.batch_decode(pred_ids)
-    # we do not want to group tokens when computing the metrics
     label_str = processor.batch_decode(pred.label_ids, group_tokens=False)
 
     wer = metric.compute(predictions=pred_str, references=label_str)
@@ -136,7 +140,6 @@ trainer = Trainer(
     compute_metrics=compute_metrics,
     train_dataset=data['train'],
     eval_dataset=data['test'],
-    #tokenizer=processor.feature_extractor,
 )
 
 batch = data_collator([data["train"][0], data["train"][1]])
