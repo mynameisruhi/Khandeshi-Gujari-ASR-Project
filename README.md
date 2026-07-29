@@ -5,7 +5,7 @@ Automatic speech recognition project
 
 Speech to text in the language Khandeshi Gujari
 
-Dataset found at [rupeez/khandeshi-gujari-dataset](url)
+Dataset found at rupeez/khandeshi-gujari-dataset: [https://huggingface.co/datasets/rupeez/khandeshi-gujari-dataset](url)
 
 
 Dataset transcribed by Rajaram Patil
