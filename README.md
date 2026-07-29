@@ -22,8 +22,6 @@ Dataset transcribed by Rajaram Patil
 
 Audio taken from Gujar Randhak YouTube, Gujar Samaj Mandal on Instagram, and Asha Patil
 
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 **Usage**
 
 ```
