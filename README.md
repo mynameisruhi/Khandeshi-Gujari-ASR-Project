@@ -19,6 +19,7 @@ model = PeftModel.from_pretrained(model, "rupeez/khandeshi-gujari-asr")
 
 
 Dataset transcribed by Rajaram Patil
+
 Audio taken from Gujar Randhak YouTube, Gujar Samaj Mandal on Instagram, and Asha Patil
 
 | Step | Training Loss | Testing Loss | Wer Ortho | Wer |
