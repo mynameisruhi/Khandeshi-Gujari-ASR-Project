@@ -17,14 +17,6 @@ from functools import partial
 from peft import LoraConfig, get_peft_model
 from transformers import Seq2SeqTrainingArguments
 from transformers import Seq2SeqTrainer
-from transformers import WhisperProcessor
-from pydub import AudioSegment
-import numpy as np
-from datasets import Dataset
-from pydub import AudioSegment
-import numpy as np
-from datasets import Dataset
-from pydub import AudioSegment
 
 processor = WhisperProcessor.from_pretrained(
     "openai/whisper-large-v3-turbo", language="marathi", task="transcribe"
@@ -317,11 +309,6 @@ data = data.map(
     prepare_dataset, remove_columns=data.column_names["train"], num_proc=1
 )
 
-import torch
-
-from dataclasses import dataclass
-from typing import Any, Dict, List, Union
-
 @dataclass
 class DataCollatorSpeechSeq2SeqWithPadding:
     processor: Any
@@ -364,11 +351,7 @@ class DataCollatorSpeechSeq2SeqWithPadding:
 
 data_collator = DataCollatorSpeechSeq2SeqWithPadding(processor=processor)
 
-import evaluate
-
 metric = evaluate.load("wer")
-
-from transformers.models.whisper.english_normalizer import BasicTextNormalizer
 
 normalizer = BasicTextNormalizer()
 
@@ -399,14 +382,7 @@ def compute_metrics(pred):
 
     return {"wer_ortho": wer_ortho, "wer": wer}
 
-import torch
-from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
-from datasets import load_dataset
-
-from functools import partial
-from peft import LoraConfig, get_peft_model
-
-LORA_CONFIG = LoraConfig(
+lora = LoraConfig(
     r=16,                       
     lora_alpha=32,               
     target_modules=["q_proj", "v_proj"],
@@ -414,17 +390,16 @@ LORA_CONFIG = LoraConfig(
     bias="none",
 )
 
-
 def model_init():
     model = AutoModelForSpeechSeq2Seq.from_pretrained(
         "openai/whisper-large-v3-turbo",
-        torch_dtype=torch.bfloat16,  # Force model to bfloat16
+        torch_dtype=torch.bfloat16,  
         low_cpu_mem_usage=True,
         use_safetensors=True,
     )
     model.config.use_cache = False
 
-    model = get_peft_model(model, LORA_CONFIG)
+    model = get_peft_model(model, lora)
 
     model.enable_input_require_grads()
 
@@ -436,15 +411,8 @@ def model_init():
 
     return model
 
-import optuna
-
 def compute_objective(metrics):
     return metrics["eval_wer"]
-
-
-from transformers import Seq2SeqTrainingArguments
-
-from transformers import Seq2SeqTrainer
 
 training_args = Seq2SeqTrainingArguments(
     output_dir="./whisper-gridsearch",
