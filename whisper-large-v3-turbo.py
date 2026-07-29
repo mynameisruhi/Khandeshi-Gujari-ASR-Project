@@ -191,7 +191,8 @@ training_args = Seq2SeqTrainingArguments(
     report_to=["tensorboard"],
     metric_for_best_model="wer",
     greater_is_better=False,
-    load_best_model_at_end=True
+    load_best_model_at_end=True,
+    optim='adafactor'
 )
 
 trainer = Seq2SeqTrainer(

@@ -133,10 +133,10 @@ model.generate = partial(
 
 training_args = Seq2SeqTrainingArguments(
     output_dir="./whisper-small-kg",  
-    per_device_train_batch_size=16,
+    per_device_train_batch_size=4,
     gradient_accumulation_steps=1,  
     learning_rate=1e-5,
-    lr_scheduler_type="constant_with_warmup",
+    lr_scheduler_type="inverse_sqrt",
     warmup_steps=25,
     max_steps=25,  
     gradient_checkpointing=True,
@@ -146,14 +146,15 @@ training_args = Seq2SeqTrainingArguments(
     per_device_eval_batch_size=16,
     predict_with_generate=True,
     generation_max_length=225,
-    save_steps=5,
-    eval_steps=5,
-    logging_steps=5,
+    save_steps=10,
+    eval_steps=10,
+    logging_steps=10,
     report_to=["tensorboard"],
     load_best_model_at_end=True,
     metric_for_best_model="wer",
     greater_is_better=False,
     push_to_hub=False,
+    optim='adafactor'
 )
 
 trainer = Seq2SeqTrainer(

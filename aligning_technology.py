@@ -1,3 +1,10 @@
+import torch
+import torchaudio
+import uroman
+import re
+import gc
+from torchaudio.pipelines import MMS_FA as bundle
+
 sentences = [
     "नमस्कार मंडळी गुजर रंधकमे तमारू स्वागत हे.",
     "आज आपण बनावसू एकदम जल्दी थनारी कांदानी भाजी.",
@@ -62,17 +69,7 @@ sentences = [
     "अने पारंपारिक रेसिपी देखवानी करता गुजर रंधक ने सबस्क्राईब करोजो.",
     "वई तमने कई रेसिपी देखवाने गमसे ते कॉमेंट करीने म्हने कई शकज.",
     "धन्यवाद."
-]
-
-import torch
-import torchaudio
-import uroman
-import re
-import gc
-from torchaudio.pipelines import MMS_FA as bundle
-
-gc.collect()
-torch.cuda.empty_cache()
+]  # replace with own sentences
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -81,7 +78,7 @@ tokenizer = bundle.get_tokenizer()
 aligner = bundle.get_aligner()
 uroman_tool = uroman.Uroman()
 
-audio_file = "preview-audio.wav"
+audio_file = "preview-audio.wav"  # replace with own audio
 waveform, sample_rate = torchaudio.load(audio_file)
 
 sentence_word_counts = []
