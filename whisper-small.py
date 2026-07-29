@@ -16,7 +16,6 @@ processor = WhisperProcessor.from_pretrained(
     "openai/whisper-small", language="marathi", task="transcribe"
 )
 
-
 audio_list = []
 text_list = []
 

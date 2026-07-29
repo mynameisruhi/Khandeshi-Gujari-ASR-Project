@@ -15,30 +15,34 @@ from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq
 processor = AutoProcessor.from_pretrained("DrishtiSharma/whisper-large-v2-marathi")
 model = AutoModelForSpeechSeq2Seq.from_pretrained("DrishtiSharma/whisper-large-v2-marathi")
 
-audio = AudioSegment.from_wav("/content/enhanced_झणझणीत.wav")
-
-audio = audio.set_frame_rate(16000).set_channels(1)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
 
 audio_list = []
 text_list = []
 
-for item in aligned_segments:
-    start_ms = int(item["start"] * 1000)
-    end_ms = int(item["end"] * 1000)
+for source in data_sources:
+    audio = AudioSegment.from_file(source["audio_path"])
 
-    audio_chunk = audio[start_ms:end_ms]
+    audio = audio.set_frame_rate(16000).set_channels(1)
 
-    audio_array = np.array(
-        audio_chunk.get_array_of_samples(), dtype=np.float32
-    )
-    audio_array /= 32768.0  
+    for item in source["segments"]:
+        start_ms = int(item["start"] * 1000)
+        end_ms = int(item["end"] * 1000)
 
-    audio_list.append({"array": audio_array, "sampling_rate": 16000})
-    text_list.append(item["text"])
+        audio_chunk = audio[start_ms:end_ms]
+
+        audio_array = np.array(
+            audio_chunk.get_array_of_samples(), dtype=np.float32
+        )
+        audio_array /= 32768.0
+
+        audio_list.append({"array": audio_array, "sampling_rate": 16000})
+        text_list.append(item["text"])
 
 dic = {"audio": audio_list, "text": text_list}
 data = Dataset.from_dict(dic).train_test_split(
-    test_size=0.2, shuffle=True
+    test_size=0.2, shuffle=True  
 )
 
 save_test = data['test']

@@ -27,7 +27,6 @@ for source in data_sources:
 
     audio = audio.set_frame_rate(16000).set_channels(1)
 
-    # 3. Process each segment within this file
     for item in source["segments"]:
         start_ms = int(item["start"] * 1000)
         end_ms = int(item["end"] * 1000)
