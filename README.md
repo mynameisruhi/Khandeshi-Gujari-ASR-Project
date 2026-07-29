@@ -1,7 +1,7 @@
 # Khandeshi Gujari ASR Project
 Audio to Text in the dialect **Khandeshi Gujari** (dialect of Khandeshi, related to Marathi and Gujarati)
 
-Fine tuning Whisper Large v3 Marathi model on Khandeshi Gujari data
+Fine tuning [Whisper Large v3 Turbo](https://huggingface.co/openai/whisper-large-v3-turbo) model on Khandeshi Gujari data
 
 **Model** found at: [rupeez/khandeshi-gujari-asr](https://huggingface.co/rupeez/khandeshi-gujari-asr/commit/1eb8af6fe77236b65905072d7429c4fa6f06192c)
 
