@@ -5,6 +5,16 @@ Fine tuning [Whisper Large v3 Turbo](https://huggingface.co/openai/whisper-large
 
 **Model** found at: [rupeez/khandeshi-gujari-asr](https://huggingface.co/rupeez/khandeshi-gujari-asr/commit/1eb8af6fe77236b65905072d7429c4fa6f06192c)
 
+'''python
+from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq
+from peft import PeftModel
+
+processor = AutoProcessor.from_pretrained("openai/whisper-large-v3-turbo")
+model = AutoModelForSpeechSeq2Seq.from_pretrained("openai/whisper-large-v3-turbo")
+
+model = PeftModel.from_pretrained(model, "rupeez/khandeshi-gujari-asr")
+'''
+
 **Dataset** found at [rupeez/khandeshi-gujari-dataset](https://huggingface.co/datasets/rupeez/khandeshi-gujari-dataset)
 
 
