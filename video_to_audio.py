@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from pathlib import Path
 import yt_dlp
 
@@ -19,7 +18,7 @@ ydl_opts = {
 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
     error_code = ydl.download(channels)
 
-=======
+
 from pathlib import Path
 import yt_dlp
 
@@ -40,4 +39,3 @@ ydl_opts = {
 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
     error_code = ydl.download(channels)
 
->>>>>>> 1c9270a9e5a323e7d6183708dfba1d32a9de3d3a
