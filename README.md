@@ -21,7 +21,7 @@ model = PeftModel.from_pretrained(model, "rupeez/khandeshi-gujari-asr")
 Dataset transcribed by Rajaram Patil
 
 
-| Step | Training Loss | Validation Loss | Wer Ortho | Wer |
+| Step | Training Loss | Testing Loss | Wer Ortho | Wer |
 | ---: | ------------: | --------------: | --------: | ---: |
 | 10 | 1.644490 | 1.431492 | 95.012469 | 68.589744 |
 | 20 | 1.309245 | 1.236266 | 94.014963 | 55.769231 |
