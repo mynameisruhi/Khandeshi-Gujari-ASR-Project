@@ -1,11 +1,5 @@
 # Model page: https://huggingface.co/DrishtiSharma/whisper-large-v2-marathi
 
-# Use a pipeline as a high-level helper
-from transformers import pipeline
-
-pipe = pipeline("automatic-speech-recognition", model="DrishtiSharma/whisper-large-v2-marathi")
-
-# Load model directly
 from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq
 
 processor = AutoProcessor.from_pretrained("DrishtiSharma/whisper-large-v2-marathi")
@@ -19,19 +13,14 @@ import numpy as np
 from datasets import Dataset
 from pydub import AudioSegment
 
-target_sr = processor.feature_extractor.sampling_rate  # usually 16000
-
-# 1. Load full audio
-
 audio_list = []
 text_list = []
 
 for source in data_sources:
     audio = AudioSegment.from_file(source["audio_path"])
 
-    audio = audio.set_frame_rate(target_sr).set_channels(1)
+    audio = audio.set_frame_rate(16000).set_channels(1)
 
-    # 3. Process each segment within this file
     for item in source["segments"]:
         start_ms = int(item["start"] * 1000)
         end_ms = int(item["end"] * 1000)
@@ -43,7 +32,7 @@ for source in data_sources:
         )
         audio_array /= 32768.0
 
-        audio_list.append({"array": audio_array, "sampling_rate": target_sr})
+        audio_list.append({"array": audio_array, "sampling_rate": 16000})
         text_list.append(item["text"])
 
 dic = {"audio": audio_list, "text": text_list}
@@ -62,7 +51,6 @@ def prepare_dataset(example):
         text=example["text"],
     )
 
-    # compute input length of audio sample in seconds
     example["input_length"] = len(audio["array"]) / audio["sampling_rate"]
 
     return example
@@ -163,7 +151,7 @@ for param in model.model.encoder.parameters():
 training_args = Seq2SeqTrainingArguments(
     output_dir="./whisper-small-kg",
     per_device_train_batch_size=4,
-    learning_rate=1e-5,
+    learning_rate=0.0001,
     max_steps=40,
     gradient_checkpointing=True,
     fp16=False,
