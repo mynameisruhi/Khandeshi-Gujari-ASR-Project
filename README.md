@@ -22,6 +22,45 @@ Dataset transcribed by Rajaram Patil
 
 Audio taken from Gujar Randhak YouTube, Gujar Samaj Mandal on Instagram, and Asha Patil
 
+**Using Model for Inference:**
+
+```
+from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq
+from peft import PeftModel
+
+processor = AutoProcessor.from_pretrained("openai/whisper-large-v3-turbo")
+model = AutoModelForSpeechSeq2Seq.from_pretrained("openai/whisper-large-v3-turbo")
+
+model = PeftModel.from_pretrained(model, "rupeez/khandeshi-gujari-asr")
+
+from pydub import AudioSegment
+import numpy as np
+import torch
+
+path = '/content/enhanced_झणझणीत.wav'  # replace with your own file
+audio = AudioSegment.from_file(path)
+audio = np.array(audio.get_array_of_samples())
+
+inputs = processor(audio, return_tensors="pt")
+input_features = inputs.input_features.to(
+    device=model.device,
+    dtype=model.dtype
+)
+
+if torch.cuda.is_available():
+    input_features = input_features.to("cuda")
+    model = model.to("cuda")
+
+generated_ids = model.generate(
+    input_features=input_features,
+    language="mr",
+    task="transcribe"
+)
+
+transcription = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+print(transcription)
+```
+
 | Step | Training Loss | Testing Loss | Wer Ortho | Wer |
 | ---: | ------------: | --------------: | --------: | ---: |
 | 10 | 1.644490 | 1.431492 | 95.012469 | 68.589744 |
