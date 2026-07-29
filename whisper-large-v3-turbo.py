@@ -1,18 +1,26 @@
 from transformers import WhisperProcessor
+import numpy as np
+from datasets import Dataset
+from pydub import AudioSegment
+import numpy as np
+from datasets import Dataset
+from pydub import AudioSegment
+import torch
+from dataclasses import dataclass
+from typing import Any, Dict, List, Union
+import evaluate
+from transformers.models.whisper.english_normalizer import BasicTextNormalizer
+import torch
+from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
+from datasets import load_dataset
+from functools import partial
+from peft import LoraConfig, get_peft_model
+from transformers import Seq2SeqTrainingArguments
+from transformers import Seq2SeqTrainer
 
 processor = WhisperProcessor.from_pretrained(
     "openai/whisper-large-v3-turbo", language="marathi", task="transcribe"
 )
-
-import numpy as np
-from datasets import Dataset
-from pydub import AudioSegment
-
-target_sr = processor.feature_extractor.sampling_rate
-
-import numpy as np
-from datasets import Dataset
-from pydub import AudioSegment
 
 audio_list = []
 text_list = []
@@ -20,7 +28,7 @@ text_list = []
 for source in data_sources:
     audio = AudioSegment.from_file(source["audio_path"])
 
-    audio = audio.set_frame_rate(target_sr).set_channels(1)
+    audio = audio.set_frame_rate(16000).set_channels(1)
 
     for item in source["segments"]:
         start_ms = int(item["start"] * 1000)
@@ -33,15 +41,13 @@ for source in data_sources:
         )
         audio_array /= 32768.0
 
-        audio_list.append({"array": audio_array, "sampling_rate": target_sr})
+        audio_list.append({"array": audio_array, "sampling_rate": 16000})
         text_list.append(item["text"])
 
 dic = {"audio": audio_list, "text": text_list}
 data = Dataset.from_dict(dic).train_test_split(
     test_size=0.2, shuffle=True 
 )
-
-print(data)
 
 save_test = data['test']
 
@@ -61,12 +67,6 @@ def prepare_dataset(example):
 data = data.map(
     prepare_dataset, remove_columns=data.column_names["train"], num_proc=1
 )
-
-import torch
-
-from dataclasses import dataclass
-from typing import Any, Dict, List, Union
-
 
 @dataclass
 class DataCollatorSpeechSeq2SeqWithPadding:
@@ -110,14 +110,9 @@ class DataCollatorSpeechSeq2SeqWithPadding:
 
 data_collator = DataCollatorSpeechSeq2SeqWithPadding(processor=processor)
 
-import evaluate
-
 metric = evaluate.load("wer")
 
-from transformers.models.whisper.english_normalizer import BasicTextNormalizer
-
 normalizer = BasicTextNormalizer()
-
 
 def compute_metrics(pred):
     pred_ids = pred.predictions
@@ -145,13 +140,6 @@ def compute_metrics(pred):
 
     return {"wer_ortho": wer_ortho, "wer": wer}
 
-import torch
-from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
-from datasets import load_dataset
-
-from functools import partial
-from peft import LoraConfig, get_peft_model
-
 lora = LoraConfig(
     r=16,                       
     lora_alpha=32,               
@@ -159,7 +147,6 @@ lora = LoraConfig(
     lora_dropout=0.05,
     bias="none",
 )
-
 
 def model_init():
     model = AutoModelForSpeechSeq2Seq.from_pretrained(
@@ -185,16 +172,11 @@ def model_init():
 def compute_objective(metrics):
     return metrics["eval_wer"]
 
-from transformers import Seq2SeqTrainingArguments
-
-
-from transformers import Seq2SeqTrainer
-
 training_args = Seq2SeqTrainingArguments(
-    output_dir="./whisper-gridsearch",
-    learning_rate=0.0001,  # Overridden by Optuna
-    max_steps=50,  # Overridden by Optuna
-    per_device_train_batch_size=4,  # Overridden by Optuna
+    output_dir="./whisper-large-v3-turbo-kg",
+    learning_rate=0.0001,  
+    max_steps=50,  
+    per_device_train_batch_size=4, 
     gradient_checkpointing=True,
     gradient_checkpointing_kwargs={"use_reentrant": False},
     fp16=False,
@@ -214,7 +196,7 @@ training_args = Seq2SeqTrainingArguments(
 
 trainer = Seq2SeqTrainer(
     args=training_args,
-    model_init=model_init,  # <-- Pass model_init function here
+    model_init=model_init,  
     train_dataset=data["train"],
     eval_dataset=data["test"],
     data_collator=data_collator,
