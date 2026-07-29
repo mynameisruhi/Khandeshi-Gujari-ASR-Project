@@ -1,0 +1,143 @@
+sentences = [
+    "नमस्कार मंडळी गुजर रंधकमे तमारू स्वागत हे.",
+    "आज आपण बनावसू एकदम जल्दी थनारी कांदानी भाजी.",
+    "एम तो आपण कांदानी भाजी बे तीन प्रकारे बनाई शकेज पण अपनी आजनी जे भाजी तिनु कॉम्बिनेशन रसनी जोडे खूप भारी लागज.",
+    "उन्हाळामे रसनी जोडे डाळभात व्हशे लिनी जोडे साईड डिश म्हणून कांदानी भाजी बनाई शकेज.",
+    "व्हिडिओने सुरुवात करेज.",
+    "याहा हुवे मेडियम साईजना सात कांदा लयेला हे.",
+    "तिने फोतरा काढीने येवा पद्धतती कर करी लेसू.",
+    "आपण ज्यारे कांदो कापज त्यारे पाकळ्या मोकळ्यो थई जाज.",
+    "कांदाने येवा पद्धतती लंबा लंबा कट करी लेसू.",
+    "येवा पद्धतती कांदा जर कट कर्यो तो मोकळ्यो थई जाज.",
+    "ह्या आपणो कांदो तयार पाकळ्यो थई जयोला हे.",
+    "ह्या हुवे दस बार लसणण्यो पाकळ्यो लयल्यो हे अने कढीपतो लयेलो हे.",
+    "लसणाने आपण खलबत्तामे बारीक कुटी लेसू.",
+    "भाजी बघारानी करता कढई तेल लई लिधू.",
+    "तेल आपणू गरम थयु के तिनामे राई लाखी देसू.",
+    "राई अपनी मस्त फुल्या के तिनामे जिरू लाखवी देसू.",
+    "जिरू पण फुल्यू के तिनामे कढीपतो लाखवी देसू.",
+    "कढीपतो लाख्यो के तिनामे लगेच कांदो लाखवी देसू.",
+    "केवापण भाजीमे बघार परफेक्ट थयो तो अपनी भाजी मस्त स्वाद देज.",
+    "हावडा आपण कांदाहोने मऊ थाइज त्यासुधी चडाई लेसू.",
+    "कांदा येटला मुकता देखाता हसे पण भाजी अपनी पुरी थाज तेहलेक कांदा गळी जाज.",
+    "कांदा आपना तयार रह्या तेहलेक आपना शिंगोणदाना शेकी लेसू.",
+    "शिंगोणदाणा ठंडा थया के मिक्सरमे जाडा जाडा पिळी लेसू.",
+    "आपना ये कांदा हे ते मऊ थई जयोला हे.",
+    "हावडा वचमे एई पद्धतती जागा करसू.",
+    "तिनामे आपणये कुटेल लसण हे ते लाखवी देसू.",
+    "लसणाना कच्चोपणा जाज त्यासुधी वचेमे मिक्स करीने सतोळाय लेसू.",
+    "नंतर कांदामे लसणाने मिक्स करी लेसू.",
+    "एकाद बे मिनीट सुधी तिने सताळाय लेसू.",
+    "ह्या कथमर लयेली हे.",
+    "कांदाना भाजीमे जेटलो कथमर रेज तेहली भाजी खूप स्वाद देज.",
+    "ह्या आपना कांदा तयार थई जयला हे.",
+    "हावडा तिनामे मसाला लाखवी देसू.",
+    "इनामे चार चमचा समार लाखेलो हे.",
+    "कांदानी भाजी थोडी तिखीज सारी लागज.",
+    "कांदा जे छेना गळचट रेज तिनकरता समार जास्त लागू पडज.",
+    "धना पावडर एक चमचो.",
+    "एक चमचो हळद पावडर.",
+    "हावडा आय जे मसाला ते मिक्स कर लेसू.",
+    "कांदानी भाजी करवाने जास्त टाईम नई लागतो.",
+    "एकदम झटपट अपनी भाजी तयार भई जाज.",
+    "फक्त कांदा मोळाने थोडो टाईम लागज पण भाजी बनावाने एकदम जल्दी थई जाज.",
+    "हावडा आपण जे लसण खलबत्तामे कुटेलू इतू थोडूस पाणी लाखीने ते पण आय भाजीमे लाखी लेसू.",
+    "म्हणजे आपर्ना भाजी तिने मस्त बाईंडींग आयी जशे अने भाजी मस्त मिक्स थई जशे.",
+    "एकदम घुटकोभर पाणी लाखवाना हे भाजीमे.",
+    "हावडा आपण तिनाये मिठू लाखी लेसू.",
+    "मिठानेपण मिक्स करी लेसू.",
+    "अने हावडा आपण शिंजे शिंगोणदाणानो कुट करेलो हुतो.",
+    "एकदम जाडो जाडो कूट करेलो हुतो.",
+    "चार पाच चमचा लाखी लेसू.",
+    "अने अपना शिंगोणदाणा शेकेला व्हता म्हणून अपनी भाजीने जास्त हलोवाणू सतावाणू नई मये.",
+    "अने येवा पद्धतती अपनी भाजी फक्त मिक्स थवा येतलूज कराणू हे.",
+    "अने येवा पद्धतती अपनी भाजी एकदम झटपट तयार थई जाईली हे.",
+    "शेवटलू इनग्रेडीअन्ट लाखवून हे ते म्हणजे कथमर.",
+    "कथमर लाखीने मिक्स करी लेसू.",
+    "येवा पद्धतती अपनी भाजी तयार थई जयेली हे.",
+    "भाजीमे हावडा प्लेटमे सर्व करी लेसू.",
+    "येवा पद्धतती रसनी जोडे लम्हेबी कांदानी भाजी बनाई देखोजो.",
+    "गमी होय तो शेयर रेसिपी ने लाईक करोजो.",
+    "शेयर करोजो तमारा फ्रेंड फॅमिलीनी जोडे.",
+    "अने पारंपारिक रेसिपी देखवानी करता गुजर रंधक ने सबस्क्राईब करोजो.",
+    "वई तमने कई रेसिपी देखवाने गमसे ते कॉमेंट करीने म्हने कई शकज.",
+    "धन्यवाद."
+]
+
+import torch
+import torchaudio
+import uroman
+import re
+import gc
+from torchaudio.pipelines import MMS_FA as bundle
+
+# 1. Free VRAM Cache
+gc.collect()
+torch.cuda.empty_cache()
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# 2. Disable with_star=False to prevent dimension mismatch during chunking
+model = bundle.get_model(with_star=False).to(device)
+tokenizer = bundle.get_tokenizer()
+aligner = bundle.get_aligner()
+uroman_tool = uroman.Uroman()
+
+
+# 4. Load Audio
+audio_file = "preview-audio.wav"
+waveform, sample_rate = torchaudio.load(audio_file)
+
+# 5. Process & Romanize Words
+sentence_word_counts = []
+all_words = []
+
+for sentence in sentences:
+    romanized = uroman_tool.romanize_string(sentence, lcode="mar")
+    cleaned = re.sub(r"[^a-z']", " ", romanized.lower())
+    words = [w for w in cleaned.split() if w]
+
+    sentence_word_counts.append(len(words))
+    all_words.extend(words)
+
+tokens = tokenizer(all_words)
+
+# 6. Safe Chunked Inference (30s Windows)
+chunk_sec = 75
+chunk_len = chunk_sec * sample_rate
+total_len = waveform.size(1)
+
+emissions = []
+
+with torch.inference_mode():
+    for start in range(0, total_len, chunk_len):
+        end = min(start + chunk_len, total_len)
+        chunk = waveform[:, start:end].to(device)
+
+        with torch.autocast(device_type="cuda", dtype=torch.float16):
+            chunk_emission, _ = model(chunk)
+
+        # Move chunk emission to CPU float32 immediately
+        emissions.append(chunk_emission[0].float().cpu())
+
+# 7. Concatenate along time dimension (dim=0)
+full_emission = torch.cat(emissions, dim=0)
+
+# 8. Compute alignment on CPU
+token_spans = aligner(full_emission, tokens)
+
+# 9. Calculate time ratio
+ratio = waveform.size(1) / full_emission.size(0) / sample_rate
+
+# 10. Output Sentence Timestamps
+word_idx = 0
+for sentence, count in zip(sentences, sentence_word_counts):
+    if count == 0:
+        continue
+
+    sent_spans = token_spans[word_idx : word_idx + count]
+    start_sec = sent_spans[0][0].start * ratio
+    end_sec = sent_spans[-1][-1].end * ratio
+
+    print(f"[{start_sec:.2f}s -> {end_sec:.2f}s] {sentence}")
+    word_idx += count

@@ -15,51 +15,6 @@ from pydub import AudioSegment
 from datasets import Dataset
 import numpy as np
 
-aligned_segments = [
-    {"start": 1.16, "end": 4.33, "text": "नमस्कार मंडळी गुजर रंधकमे तमारू स्वागत हे."},
-    {"start": 4.93, "end": 9.53, "text": "आज आपण बनावसू एकदम जल्दी थनारी कांदानी भाजी."},
-    {"start": 9.57, "end": 17.33, "text": "एम तो आपण कांदानी भाजी बे तीन प्रकारे बनाई शकेज पण अपनी आजनी जे भाजी तिनु कॉम्बिनेशन रसनी जोडे खूप भारी लागज."},
-    {"start": 17.83, "end": 24.39, "text": "उन्हाळामे रसनी जोडे डाळभात कृश लिनी जोडे साईड डिश म्हणून कांदानी भाजी बनाई शकेज."},
-    {"start": 24.40, "end": 26.54, "text": "व्हिडिओने सुरुवात करेज."},
-    {"start": 26.54, "end": 36.84, "text": "यहा हुवे मेडियम साईजना सात कांदा लयेला हे तिनेक, फोतरा काढीने येवा पद्धतती कर करी लेसू."},
-    {"start": 36.88, "end": 41.90, "text": "आपण ज्यारे कांदो कापणज त्यारे पाकळ्या मोकळ्यो थई जाज."},
-    {"start": 41.96, "end": 45.25, "text": "कांदाने येवा पद्धतती लंबा लंबा कट करी लेसू."},
-    {"start": 45.25, "end": 55.05, "text": "येवा पद्धतती कांदा जर कट कर्यो तो मोकळ्यो थई जाज."},
-    {"start": 55.05, "end": 60.78, "text": "ह्या आपणो कांदो तयार थईजयोला हे."},
-    {"start": 60.88, "end": 65.67, "text": "ह्या हुवे दस बार लसणण्यो पाकळ्यो लयत्यो हे अने कढीपतो लयेलो हे."},
-    {"start": 65.81, "end": 70.24, "text": "लसणाने आपण खलबत्तामे बारीक कुटीलेसू."},
-    {"start": 70.33, "end": 72.97, "text": "भाजी बघारानी करता कढई तेल लई लिधू."},
-    {"start": 74.12, "end": 93.47, "text": "तेल आपणू गरम थयु के तिनामे राई लाखवी देसू, राई अपनी मस्त फुल्या के तिनामे जिरू लाखवी देसू, जिरू पण फुल्यू के तिनामे कढीपतो लाखवी देसू, कढी पतो लाख्यो के तिनामे लगेच कांदो लाखवी देसू."},
-    {"start": 93.95, "end": 100.37, "text": "केवापण भाजीमे बघार परफेक्ट थयो, तो अपनी भाजी मस्त स्वाद देज."},
-    {"start": 100.38, "end": 106.11, "text": "हावडा आपण कांदाहोने मऊ थाइज त्यासुधी चडाई लेसू."},
-    {"start": 106.66, "end": 124.44, "text": "कांदा येहला मुकता देखाता हसे पण भाजी अपनी पुरी भाज तेहलेक कांदा काळजी जाज कांदा आपना तयार रह्या तेहलेक, आपना शिंगोणदाना शेकी लेसू."},
-    {"start": 124.48, "end": 128.41, "text": "शिंगोणदाणा ठंडा भया के मिक्सरमे जाडा जाडा पिकी लेसू."},
-    {"start": 128.42, "end": 132.28, "text": "आपना ये कांदा हे ते मऊ थई जयोला हे."},
-    {"start": 133.03, "end": 141.34, "text": "हावडा वचमे ई पद्धतती जागा करसू तिनामे आपणये कुटेल लसण हे ते लाखवी देसू."},
-    {"start": 141.40, "end": 164.30, "text": "लसणाना कच्चोपणा जाजू त्यासुधी वचेमे मिक्स करीने सतोकाय लेसू नंतर कांदामे लसणाने मिक्स करी लेसू."},
-    {"start": 164.32, "end": 168.54, "text": "एकाद बे मिनीट सुधी तिने सताक सतकाये लेसू."},
-    {"start": 168.59, "end": 175.12, "text": "ह्या कथमर लयेली हे कांदाना भाजीमे जेटलो कथमर रेज तेहली भाजी खूप स्वाद देज."},
-    {"start": 175.12, "end": 180.67, "text": "ह्या आपना कांदा तयार थई जयला हे हावडा तिनामे मसाला लाखवी देसू."},
-    {"start": 180.67, "end": 184.66, "text": "इनामे चार चमचा सुमार लाखेलो हे कांदानी भाजी थोडी तिखीज सारी लागज."},
-    {"start": 185.05, "end": 192.98, "text": "कांदा जे छेना गळचट रेज तिनकरता समार जास्त लागू पडज, धना पावडर एक चमचो, एक चमचो हळद पावडर."},
-    {"start": 194.96, "end": 196.16, "text": "हावडा आय जे मसाला ते मिक्स कर लेसू."},
-    {"start": 196.38, "end": 210.21, "text": "कांदानी भाजी करवाने काईच नई लागनू जास्त टाईम नई लागतो एकदम झटपट अपनी भाजी तयार भई जाज."},
-    {"start": 210.91, "end": 215.23, "text": "फक्त कांदा मोकाने थोडो टाईम लागज पण भाजी बनावाने एकदम जल्दी थई जाज."},
-    {"start": 215.24, "end": 228.23, "text": "हावडा आपण जे लसण खलबत्तामे कुटेलू इतू थोडूस पाणी लाखीने ते पण आय भाजीमे लाखी लेसू म्हणजे आपर्ना भाजी तिने मस्त बाईंडींग आयी जशे अने भाजी भाजी मस्त मिक्स थई जशे."},
-    {"start": 228.25, "end": 232.88, "text": "एकदम घुटकोभर पाणी लाखवाना हे भाजीमे."},
-    {"start": 232.95, "end": 247.00, "text": "हावडा आपण तिनाये मिठू लाखी लेसू, मिठानेपण मिक्स करी लेसू अने हावडा आपण शिंजे शिंगोणदाणानो कूर करेलो हुतो."},
-    {"start": 247.04, "end": 251.68, "text": "एकदम जाडो जाडो कूट करेलो हुतो चार पाच चमचा लाखी लेसू."},
-    {"start": 251.68, "end": 259.88, "text": "अने अपना शिंगोणदाणा शेकेला कृता म्हणून अपनी भाजीने जास्त हलोवाणू सतावाणू नई मये."},
-    {"start": 259.88, "end": 269.11, "text": "अने येवा पद्धतारी अपनी भाजी फक्त मिक्स थवा येतलूज कराणू हे, अने येवा पद्धतती अपनी भाजी तया एकदम झटपट तयार थई जाईली हे."},
-    {"start": 271.00, "end": 273.56, "text": "शेवटलू इनग्रेडीअन्ट लाखवून हे ते म्हणजे कथमर."},
-    {"start": 276.71, "end": 278.39, "text": "कथमर लाखीने मिक्स करी लेसू."},
-    {"start": 278.79, "end": 282.42, "text": "येवा पद्धतती अपनी भाजी तयार थई जयेली हे."},
-    {"start": 285.22, "end": 287.15, "text": "भाजीमे हावडा प्लेटमे सर्व करी लेसू."},
-    {"start": 287.15, "end": 293.53, "text": "येवा पद्धतती रसनी जोडे लम्हेबी कांदानी भाजी बनाई देखोजो."},
-    {"start": 294.18, "end": 309.34, "text": "रेसिपी गमी होय तो शेयर रेसिपी ने लाईक करोजो, शेयर करोजो तमारा फ्रेंड, फॅमिलीनी जोडे, अने पारंपारिक रेसिपी देखवानी करता गुजर रंधक ने सबस्क्राईब करोजो वई तमने कई रेसिपी देखवाने गमसे ते कॉमेंट करीने म्हने कई शकज."},
-    {"start": 310.37, "end": 310.84, "text": "धन्यवाद"}
-]
-
 import numpy as np
 from datasets import Dataset
 from pydub import AudioSegment
@@ -67,34 +22,33 @@ from pydub import AudioSegment
 target_sr = processor.feature_extractor.sampling_rate  # usually 16000
 
 # 1. Load full audio
-audio = AudioSegment.from_wav("/content/enhanced_झणझणीत.wav")
-
-# 2. Resample and force MONO ONCE on the full file (fixes frame alignment)
-audio = audio.set_frame_rate(target_sr).set_channels(1)
 
 audio_list = []
 text_list = []
 
-for item in aligned_segments:
-    start_ms = int(item["start"] * 1000)
-    end_ms = int(item["end"] * 1000)
+for source in data_sources:
+    audio = AudioSegment.from_file(source["audio_path"])
 
-    # Slice exact segment (guaranteed to align cleanly now)
-    audio_chunk = audio[start_ms:end_ms]
+    audio = audio.set_frame_rate(target_sr).set_channels(1)
 
-    # Convert pydub audio segment to Float32 NumPy array normalized to [-1.0, 1.0]
-    audio_array = np.array(
-        audio_chunk.get_array_of_samples(), dtype=np.float32
-    )
-    audio_array /= 32768.0  # Normalize 16-bit PCM integer values
+    # 3. Process each segment within this file
+    for item in source["segments"]:
+        start_ms = int(item["start"] * 1000)
+        end_ms = int(item["end"] * 1000)
 
-    audio_list.append({"array": audio_array, "sampling_rate": target_sr})
-    text_list.append(item["text"])
+        audio_chunk = audio[start_ms:end_ms]
 
-# 3. Create Hugging Face Dataset
+        audio_array = np.array(
+            audio_chunk.get_array_of_samples(), dtype=np.float32
+        )
+        audio_array /= 32768.0
+
+        audio_list.append({"array": audio_array, "sampling_rate": target_sr})
+        text_list.append(item["text"])
+
 dic = {"audio": audio_list, "text": text_list}
 data = Dataset.from_dict(dic).train_test_split(
-    test_size=0.2, shuffle=True
+    test_size=0.2, shuffle=True  
 )
 
 save_test = data['test']

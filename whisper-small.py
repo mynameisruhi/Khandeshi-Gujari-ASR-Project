@@ -16,26 +16,34 @@ processor = WhisperProcessor.from_pretrained(
     "openai/whisper-small", language="marathi", task="transcribe"
 )
 
-audio = AudioSegment.from_wav('clean.wav')
-
-text_list = [
-     "नमस्कार मंडळी गुजर रंधक मेतमारु स्वागती. उनाळा मे आपणा घिरमे दही जोयज. दही घिरमे वषत आपन तिला खूप बायपरोडक",
-     "बनायशकत. जेमकी, नुस्ति दही खावाणवशी. साझ बनांवशी. लस्सी बनांवशी. पिवाणू मठ्ठू आहे. श्रिकणवाल मठ्ठू आहे. पिवाणू मठ्ठू आहे. श्रिकणवाल मठ्ठू आहे. आपन येवा प्रकार"
-]
 
 audio_list = []
+text_list = []
 
-for i, transcript in enumerate(text_list):
-  audio_chunk = audio[i*1000*10:i*1000*10+10*1000]
+for source in data_sources:
+    audio = AudioSegment.from_file(source["audio_path"])
 
-  audio_array = np.array(audio_chunk.get_array_of_samples(), dtype=np.float32)
-  audio_array /= 32767
+    audio = audio.set_frame_rate(target_sr).set_channels(1)
 
-  audio_list.append({"array": audio_array, "sampling_rate": processor.feature_extractor.sampling_rate})
+    # 3. Process each segment within this file
+    for item in source["segments"]:
+        start_ms = int(item["start"] * 1000)
+        end_ms = int(item["end"] * 1000)
 
-dic = {'audio': audio_list, 'text': text_list}
+        audio_chunk = audio[start_ms:end_ms]
 
-data = Dataset.from_dict(dic).train_test_split(test_size=0.2, shuffle=False)
+        audio_array = np.array(
+            audio_chunk.get_array_of_samples(), dtype=np.float32
+        )
+        audio_array /= 32768.0
+
+        audio_list.append({"array": audio_array, "sampling_rate": target_sr})
+        text_list.append(item["text"])
+
+dic = {"audio": audio_list, "text": text_list}
+data = Dataset.from_dict(dic).train_test_split(
+    test_size=0.2, shuffle=True  
+)
 
 save_test = data['test']
 
@@ -48,7 +56,6 @@ def prepare_dataset(example):
         text=example["text"],
     )
 
-    # compute input length of audio sample in seconds
     example["input_length"] = len(audio["array"]) / audio["sampling_rate"]
 
     return example
