@@ -25,7 +25,6 @@ for source in data_sources:
 
     audio = audio.set_frame_rate(target_sr).set_channels(1)
 
-    # 3. Process each segment within this file
     for item in source["segments"]:
         start_ms = int(item["start"] * 1000)
         end_ms = int(item["end"] * 1000)
@@ -72,25 +71,18 @@ class DataCollatorSpeechSeq2SeqWithPadding:
     def __call__(
         self, features: List[Dict[str, Union[List[int], torch.Tensor]]]
     ) -> Dict[str, torch.Tensor]:
-        # split inputs and labels since they have to be of different lengths and need different padding methods
-        # first treat the audio inputs by simply returning torch tensors
         input_features = [
             {"input_features": feature["input_features"][0]} for feature in features
         ]
         batch = self.processor.feature_extractor.pad(input_features, return_tensors="pt")
 
-        # get the tokenized label sequences
         label_features = [{"input_ids": feature["labels"]} for feature in features]
-        # pad the labels to max length
         labels_batch = self.processor.tokenizer.pad(label_features, return_tensors="pt")
 
-        # replace padding with -100 to ignore loss correctly
         labels = labels_batch["input_ids"].masked_fill(
             labels_batch.attention_mask.ne(1), -100
         )
 
-        # if bos token is appended in previous tokenization step,
-        # cut bos token here as it's append later anyways
         if (labels[:, 0] == self.processor.tokenizer.bos_token_id).all().cpu().item():
             labels = labels[:, 1:]
 
@@ -109,20 +101,15 @@ def compute_metrics(pred):
     pred_ids = pred.predictions
     label_ids = pred.label_ids
 
-    # replace -100 with the pad_token_id
     label_ids[label_ids == -100] = processor.tokenizer.pad_token_id
 
-    # we do not want to group tokens when computing the metrics
     pred_str = processor.batch_decode(pred_ids, skip_special_tokens=True)
     label_str = processor.batch_decode(label_ids, skip_special_tokens=True)
 
-    # compute orthographic wer
     wer_ortho = 100 * metric.compute(predictions=pred_str, references=label_str)
 
-    # compute normalised WER
     pred_str_norm = [normalizer(pred) for pred in pred_str]
     label_str_norm = [normalizer(label) for label in label_str]
-    # filtering step to only evaluate the samples that correspond to non-zero references:
     pred_str_norm = [
         pred_str_norm[i] for i in range(len(pred_str_norm)) if len(label_str_norm[i]) > 0
     ]
@@ -138,22 +125,20 @@ def compute_metrics(pred):
 
 model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-small")
 
-# disable cache during training since it's incompatible with gradient checkpointing
 model.config.use_cache = False
 
-# set language and task for generation and re-enable cache
 model.generate = partial(
     model.generate, language="marathi", task="transcribe", use_cache=True
 )
 
 training_args = Seq2SeqTrainingArguments(
-    output_dir="./whisper-small-kg",  # name on the HF Hub
+    output_dir="./whisper-small-kg",  
     per_device_train_batch_size=16,
-    gradient_accumulation_steps=1,  # increase by 2x for every 2x decrease in batch size
+    gradient_accumulation_steps=1,  
     learning_rate=1e-5,
     lr_scheduler_type="constant_with_warmup",
     warmup_steps=25,
-    max_steps=25,  # increase to 4000 if you have your own GPU or a Colab paid plan
+    max_steps=25,  
     gradient_checkpointing=True,
     fp16=True,
     fp16_full_eval=True,
@@ -178,7 +163,6 @@ trainer = Seq2SeqTrainer(
     eval_dataset=data["test"],
     data_collator=data_collator,
     compute_metrics=compute_metrics,
-    #tokenizer=processor,
 )
 
 trainer.train()
